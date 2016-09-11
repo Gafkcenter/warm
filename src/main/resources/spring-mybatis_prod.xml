@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- 自动扫描 -->
+	<context:component-scan base-package="com.cn.cust">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+	</context:component-scan>
+
+	<!-- 配置数据源, 整合其他框架, 事务等. -->
+	<!-- 1. 数据源 : DriverManagerDataSource -->
+	<bean id="datasource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/fhadmin" />
+		<!--<property name="url" value="jdbc:mysql://localhost:3306/db_test" />-->
+		<property name="username" value="root" />
+		<property name="password" value="#gafker655619!" />
+		<!--<property name="password" value="root" /> -->
+	</bean>
+
+	<!-- 2. mybatis的SqlSession的工厂: SqlSessionFactoryBean dataSource / typeAliasesPackage -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="datasource" />
+		<property name="typeAliasesPackage" value="com.cn.cust.entities" />
+		<!-- 自动扫描 mapping.xml 文件 -->
+		<property name="mapperLocations" value="classpath:com/cn/cust/mapping/*.xml" />
+	</bean>
+
+	<!-- 3. mybatis自动扫描加载Sql映射文件 : MapperScannerConfigurer sqlSessionFactory(已过时，目前使用sqlSessionFactoryBeanName) 
+		/ basePackage(接口映射文件所在的包) -->
+	<bean id="config" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+		<property name="basePackage" value="com.cn.cust.dao" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+
+	<!-- 4. 事务管理 : DataSourceTransactionManager -->
+	<bean id="manager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="datasource" />
+	</bean>
+
+	<!-- 5. 使用声明式事务 -->
+	<tx:annotation-driven transaction-manager="manager" />
+
+	<!-- 使用 import 节点导入配置文件 -->
+	<!-- <import resource="blog/musicboy90/mudual/*/applicationContext-*.xml" 
+		/> -->
+
+</beans>

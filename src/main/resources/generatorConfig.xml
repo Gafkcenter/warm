@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+	<!-- mysqlConnector.jar -->
+	<classPathEntry
+		location="C:\Users\john\.m2\repository\mysql-connector-java-5.1.32.jar" />
+	<!-- mysqlLoginString -->
+	<context id="context1" targetRuntime="MyBatis3">
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://127.0.0.1:3306/db_test?useUnicode=true&amp;characterEncoding=UTF-8"
+			userId="root" password="root" />
+		<!-- bean.java 项目名\src\main\java-->
+		<javaModelGenerator targetPackage="com.cn.cust.entities"
+			targetProject="warm\src\main\java" />
+		<!-- mapperSql.xml -->
+		<sqlMapGenerator targetPackage="com.cn.cust.mapping"
+			targetProject="warm\src\main\java" />
+		<!-- mapperDaoInterface.java -->
+		<javaClientGenerator targetPackage="com.cn.cust.dao"
+			targetProject="warm\src\main\java" type="XMLMAPPER" />
+		<table schema="db_test" tableName="feedback" />
+	</context>
+</generatorConfiguration>
